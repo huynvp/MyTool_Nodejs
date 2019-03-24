@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>To do list</title>
+    <link rel="stylesheet" href='./css/bootstrap.css'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+	<style>
+		.container {
+			margin-top: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h3 align="center"><b>QUẢN LÍ GHI CHÚ CÁ NHÂN</b></h3>
+		<a href="toDoList.html" class="btn btn-sm btn-secondary" style="margin-bottom: 50px">Quay về trang trước</a>
+		<table class="table" id="to-do-list">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                </tr>
+                <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                </tr>
+                <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+	</div>
+
+	<script src="./js/jquery.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+	<script>
+        $(document).ready( function () {
+            $('#to-do-list').DataTable();
+        } );
+	</script>
+</body>
+</html>
