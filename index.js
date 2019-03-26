@@ -5,8 +5,10 @@ var express = require('express'),
     config = require('config'),
     fs = require('fs'),
     xlsx = require('xlsx'),
+    router = require('./router'),
     multer = require('multer');
     // upload = multer({ dest: 'public/uploads/' });
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -28,19 +30,21 @@ app.use(body_parser.json());
 
 app.use('/', express.static(__dirname + "/public"));
 
-app.get('/', (req, res) => {
+// app.get('/api/test', (req, res) => {
 
-    res.json('123');
-});
+//     res.json('123');
+// });
 
-app.post('/upload', upload.single('excel_file'), (req, res, next) => {
-    console.log(req.file.filename);
-    var data = fs.readFileSync(`./public/uploads/${req.file.filename}`);
-    var excel = xlsx.read(data, {type:'buffer'});
+// app.post('/upload', upload.single('excel_file'), (req, res, next) => {
+//     console.log(req.file.filename);
+//     var data = fs.readFileSync(`./public/uploads/${req.file.filename}`);
+//     var excel = xlsx.read(data, {type:'buffer'});
 
     
-    res.json(excel)
-})
+//     res.json(excel)
+// })
+
+app.use('/api', router);
 
 app.listen(server_config.port, () => {
     console.log(`Server is started port ${server_config.port}`)

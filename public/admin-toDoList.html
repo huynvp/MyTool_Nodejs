@@ -5,6 +5,7 @@
 	<title>To do list</title>
     <link rel="stylesheet" href='./css/bootstrap.css'>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="./css/bootstrap-datepicker.min.css">
 	<style>
 		.container {
 			margin-top: 10px;
@@ -13,47 +14,145 @@
 </head>
 <body>
 	<div class="container">
-		<h3 align="center"><b>QUẢN LÍ GHI CHÚ CÁ NHÂN</b></h3>
-		<a href="toDoList.html" class="btn btn-sm btn-secondary" style="margin-bottom: 50px">Quay về trang trước</a>
+        <h3 align="center"><b>QUẢN LÍ GHI CHÚ CÁ NHÂN</b></h3>
+        <div style="margin-bottom: 50px">
+            <a href="toDoList.html" class="btn btn-sm btn-secondary">Quay về trang trước</a>
+            <button href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-note">Thêm công việc mới</button>
+        </div>
 		<table class="table" id="to-do-list">
             <thead>
                 <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                    <th scope="col">No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Created at</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                </tr>
-                <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                </tr>
-                <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-                </tr>
-            </tbody>
+            <tbody id=table-work></tbody>
         </table>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="add-note" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm công việc mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="">Tiêu đề</label>
+                            <input class="form-control" type="text" id="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Nội dung</label>
+                            <textarea id="content"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Ngày hết hạn</label>
+                            <input type="text" class="datepicker form-control" id="date">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-add">Save changes</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
 	</div>
 
 	<script src="./js/jquery.js"></script>
     <script src="./js/bootstrap.js"></script>
     <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script> -->
+    <script src="./js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 	<script>
+        function formatDate(date) {
+            if(date == null) return null;
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [day, month, year].join('-');
+        }
+
+        function loadData(data) {
+            var xhtml = '';
+            $(data).each((index, val) => {
+                var ts_hms = new Date(val.date);
+                // ts_hms.format("%Y-%m-%d %H:%M:%S");
+                console.log(ts_hms)
+
+                xhtml += '<tr>';
+                xhtml += '<td>'+ val.note_id +'</td>';
+                xhtml += '<td>'+ val.title +'</td>';
+                xhtml += '<td>'+ formatDate(val.date) +'</td>';
+                xhtml += '<td>'+ formatDate(val.created_at) +'</td>';
+                xhtml += '<td><button type="button" class="btn btn-primary" id="btn-edit">Edit</button> <button type="button" class="btn btn-danger" id="btn-edit">Delete</button></td>';
+                xhtml += '</tr>';
+            });
+            $('#table-work').html(xhtml);
+        }
+
+        function loadAll() {
+            $.ajax({
+                url: 'http://nodejs.local.huynguyen.com.vn/api/note/show-all',
+                type: 'GET'
+            })
+            .done(data => {
+                loadData(data);
+            });
+        }
         $(document).ready( function () {
-            $('#to-do-list').DataTable();
+            let editor;
+            loadAll();
+
+            $('.datepicker').datepicker({
+                format: 'yyyy/mm/dd',
+            });
+            ClassicEditor
+            .create( document.querySelector( '#content' ) )
+            .then( newEditor => {
+                editor = newEditor;
+            } )
+            .catch( error => {
+                    console.error( error );
+            } );
+
+            $('#btn-add').on('click', () => {
+                var data = {
+                    title: $("#title").val(),
+                    content: editor.getData(),
+                    date: $("#date").val()
+                };
+
+                $.ajax({
+                    url: 'http://nodejs.local.huynguyen.com.vn/api/note/add',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json'
+                })
+                .done(data => {
+                    console.log(data);
+                    loadAll();
+                })
+                .fail(err => {
+                    console.log(err)
+                })
+            });
         } );
 	</script>
 </body>
