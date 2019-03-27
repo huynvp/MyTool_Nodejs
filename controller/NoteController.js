@@ -38,7 +38,7 @@ router.post('/add', (req, res) => {
     });
 })
 
-router.post('/update', (req, res) => {
+router.put('/update', (req, res) => {
     data = {
         'id': req.body.id,
         'title': req.body.title,
@@ -67,6 +67,7 @@ router.delete('/delete', (req, res) => {
     .catch(err => {
         res.status(400);
         res.json('Delete node error');
+        console.log(err);
     })
 })
 

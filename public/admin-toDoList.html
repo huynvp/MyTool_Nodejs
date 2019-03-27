@@ -60,7 +60,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btn-add">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="btn-add" data-dismiss="modal">Save changes</button>
                 </div>
                 </div>
             </div>
@@ -74,86 +74,9 @@
     <!-- <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script> -->
     <script src="./js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
-	<script>
-        function formatDate(date) {
-            if(date == null) return null;
-            var d = new Date(date),
-                month = '' + (d.getMonth() + 1),
-                day = '' + d.getDate(),
-                year = d.getFullYear();
 
-            if (month.length < 2) month = '0' + month;
-            if (day.length < 2) day = '0' + day;
-
-            return [day, month, year].join('-');
-        }
-
-        function loadData(data) {
-            var xhtml = '';
-            $(data).each((index, val) => {
-                var ts_hms = new Date(val.date);
-                // ts_hms.format("%Y-%m-%d %H:%M:%S");
-                console.log(ts_hms)
-
-                xhtml += '<tr>';
-                xhtml += '<td>'+ val.note_id +'</td>';
-                xhtml += '<td>'+ val.title +'</td>';
-                xhtml += '<td>'+ formatDate(val.date) +'</td>';
-                xhtml += '<td>'+ formatDate(val.created_at) +'</td>';
-                xhtml += '<td><button type="button" class="btn btn-primary" id="btn-edit">Edit</button> <button type="button" class="btn btn-danger" id="btn-edit">Delete</button></td>';
-                xhtml += '</tr>';
-            });
-            $('#table-work').html(xhtml);
-        }
-
-        function loadAll() {
-            $.ajax({
-                url: 'http://nodejs.local.huynguyen.com.vn/api/note/show-all',
-                type: 'GET'
-            })
-            .done(data => {
-                loadData(data);
-            });
-        }
-        $(document).ready( function () {
-            let editor;
-            loadAll();
-
-            $('.datepicker').datepicker({
-                format: 'yyyy/mm/dd',
-            });
-            ClassicEditor
-            .create( document.querySelector( '#content' ) )
-            .then( newEditor => {
-                editor = newEditor;
-            } )
-            .catch( error => {
-                    console.error( error );
-            } );
-
-            $('#btn-add').on('click', () => {
-                var data = {
-                    title: $("#title").val(),
-                    content: editor.getData(),
-                    date: $("#date").val()
-                };
-
-                $.ajax({
-                    url: 'http://nodejs.local.huynguyen.com.vn/api/note/add',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: JSON.stringify(data),
-                    contentType: 'application/json'
-                })
-                .done(data => {
-                    console.log(data);
-                    loadAll();
-                })
-                .fail(err => {
-                    console.log(err)
-                })
-            });
-        } );
-	</script>
+    <!-- my script-->
+    <script src="./me/js/function.js"></script>
+	<script src="./me/js/admin_to_do_list.js"></script>
 </body>
 </html>

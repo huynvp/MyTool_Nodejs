@@ -18,51 +18,22 @@
 	<div class="container">
 		<h3 align="center"><b>GHI CHÚ CÁ NHÂN</b></h3>
 		<a href="admin-toDoList.html" class="btn btn-sm btn-secondary">Quản lí ghi chú</a>
-		<div class="row d-flex justify-content-center">
-			<div class="col-8">
-				<div class="card">
-					<div class="card-header">
-						Ghi chú 1
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Special title treatment</h5>
-						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-8">
-				<div class="card">
-					<div class="card-header">
-						Ghi chú 1
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Special title treatment</h5>
-						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-8">
-				<div class="card">
-					<div class="card-header">
-						Ghi chú 1
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Special title treatment</h5>
-						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-			</div>
+		<div class="row d-flex justify-content-center" id="work-list">
 
 		</div>
 	</div>
 
 	<script src="./js/jquery.js"></script>
 	<script src="./js/bootstrap.js"></script>
+	<script src="./me/js/function.js"></script>
 	<script>
-
+		$.ajax({
+			url: 'http://nodejs.local.huynguyen.com.vn/api/note/show-all',
+			type: 'GET'
+		})
+		.done(data => {
+			loadData(data);
+		});
 	</script>
 </body>
 </html>

@@ -16,6 +16,6 @@ exports.editNote = (note) => {
 }
 
 exports.deleteNote = (note_id) => {
-    var sql = `DELETE FROM my_note WHERE note=${note_id}`;
+    var sql = `DELETE FROM my_note WHERE note_id=${note_id}`;
     return db.delete(sql);
 }
