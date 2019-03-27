@@ -1,31 +1,33 @@
-var express = require('express'),
+    var express = require('express'),
     cors = require('cors'),
     morgan = require('morgan'),
     body_parser = require('body-parser'),
     config = require('config'),
     fs = require('fs'),
-    xlsx = require('xlsx'),
     router = require('./router'),
     multer = require('multer');
     // upload = multer({ dest: 'public/uploads/' });
 
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, `Import_${Date.now()}.xlsx`)
-    }
-})
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, './public/uploads/')
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, `Import_${Date.now()}.xlsx`)
+//     }
+// })
     
-var upload = multer({ storage: storage })
+// var upload = multer({ storage: storage })
 
 var app = express();
 var server_config = config.get('ServerConfig');
 
+var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' })
+
 app.use(cors());
-app.use(morgan('dev'));
+app.use(morgan('common',{ stream: accessLogStream }));
+
 app.use(body_parser.json());
 
 app.use('/', express.static(__dirname + "/public"));

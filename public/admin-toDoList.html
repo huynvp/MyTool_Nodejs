@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 	<title>To do list</title>
     <link rel="stylesheet" href='./css/bootstrap.css'>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="./css/bootstrap-datepicker.min.css">
 	<style>
 		.container {
@@ -19,8 +18,8 @@
             <a href="toDoList.html" class="btn btn-sm btn-secondary">Quay về trang trước</a>
             <button href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-note">Thêm công việc mới</button>
         </div>
-		<table class="table" id="to-do-list">
-            <thead>
+		<table class="table table-bordered table-striped table-hover" id="to-do-list">
+            <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">No</th>
                     <th scope="col">Title</th>
@@ -66,17 +65,50 @@
             </div>
         </div>
 
+        <div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa công việc</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="">
+                            <div class="form-group">
+                                <label for="">Tiêu đề</label>
+                                <input class="form-control" type="text" id="title-edit">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Nội dung</label>
+                                <textarea id="content-edit"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Ngày hết hạn</label>
+                                <input type="text" class="datepicker form-control" id="date-edit">
+                                <input type="hidden" id="id-edit">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btn-edit" data-dismiss="modal">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
 	</div>
 
 	<script src="./js/jquery.js"></script>
     <script src="./js/bootstrap.js"></script>
-    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-    <!-- <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script> -->
     <script src="./js/bootstrap-datepicker.min.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+    <script src="./js/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
     <!-- my script-->
     <script src="./me/js/function.js"></script>
-	<script src="./me/js/admin_to_do_list.js"></script>
+    <script src="./me/js/admin_to_do_list.js"></script>
 </body>
 </html>

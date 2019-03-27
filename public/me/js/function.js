@@ -32,7 +32,7 @@ function loadDataAdmin(data) {
         xhtml += '<td>'+ val.title +'</td>';
         xhtml += '<td>'+ formatDate(val.date) +'</td>';
         xhtml += '<td>'+ formatDate(val.created_at) +'</td>';
-        xhtml += '<td><button type="button" class="btn btn-primary btn-edit" data-id="'+ val.note_id +'">Edit</button> ';
+        xhtml += '<td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#edit-note" data-id="'+ val.note_id +'">Edit</button> ';
         xhtml += '<button type="button" class="btn btn-danger btn-delete" data-id="'+ val.note_id +'">Delete</button></td>';
         xhtml += '</tr>';
     });

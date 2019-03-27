@@ -21,6 +21,18 @@ router.get('/show-all', (req, res) => {
     })
 })
 
+router.get('/show/:id', (req, res) => {
+    note.showOnceNote(req.params['id'])
+    .then(data => {
+        res.status(200);
+        res.json(data);
+    })
+    .catch(err => {
+        res.status(400);
+        res.json(err);
+    })
+});
+
 router.post('/add', (req, res) => {
     data = {
         'title': req.body.title,
@@ -44,7 +56,7 @@ router.put('/update', (req, res) => {
         'title': req.body.title,
         'content': req.body.content,
         'date': req.body.date,
-        'status': req.body.status
+        // 'status': req.body.status
     }
 
     note.editNote(data)
@@ -53,6 +65,7 @@ router.put('/update', (req, res) => {
         res.json(rows);
     })
     .catch(err => {
+        console.log(err);
         res.status(400);
         res.json('Update node error');
     });
