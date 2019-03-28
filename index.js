@@ -4,7 +4,7 @@
     body_parser = require('body-parser'),
     config = require('config'),
     fs = require('fs'),
-    router = require('./router'),
+    router = require('./router/router'),
     multer = require('multer');
     // upload = multer({ dest: 'public/uploads/' });
 

@@ -43,6 +43,7 @@ function loadData(data) {
     var xhtml = '';
 
     $(data).each(function(index, value) {
+        console.log(value)
         xhtml += '<div class="col-8">';
         xhtml += '<div class="card">';
         xhtml += '<div class="card-header"><b>' + value.title + '</div></b>';
