@@ -13,6 +13,10 @@ router.get('/show-all', (req, res) => {
     note_controller.showAll(req, res);
 })
 
+router.get('/show-level', (req, res) => {
+    note_controller.showLevelList(req, res);
+})
+
 router.get('/show/:id', (req, res) => {
     note_controller.showOnce(req, res);
 });

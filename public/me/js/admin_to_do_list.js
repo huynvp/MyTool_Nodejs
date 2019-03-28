@@ -3,6 +3,8 @@ $(document).ready( function () {
     let editor_edit;
     loadAll();
 
+    renderSelection('#level');
+
     $('#table-work').on('click', '.btn-edit', function() {
         $.ajax({
             url: 'http://nodejs.local.huynguyen.com.vn/api/note/show/' + $(this).data("id"),
@@ -10,12 +12,12 @@ $(document).ready( function () {
             dataType: 'json',
         })
         .done(data => {
-            console.log(data)
-
-            $('#id-edit').val(data[0]['note_id'])
-            $('#title-edit').val(data[0]['title'])
-            $('#date-edit').val(formatDateDb(data[0]['date']))
-            editor_edit.setData(data[0]['content'])
+            value = data.data[0];
+            $('#id-edit').val(value['note_id'])
+            $('#title-edit').val(value['title'])
+            $('#date-edit').val(formatDateDb(value['date']))
+            editor_edit.setData(value['content'])
+            renderSelection('#level-edit', value['level_id']);
         })
         .fail(err => {
             console.log(err)
@@ -27,7 +29,8 @@ $(document).ready( function () {
             id: $("#id-edit").val(),
             title: $("#title-edit").val(),
             content: editor_edit.getData(),
-            date: $("#date-edit").val()
+            date: $("#date-edit").val(),
+            level: $("#level-edit").val(),
         };
 
         $.ajax({
@@ -111,7 +114,8 @@ $(document).ready( function () {
         var data = {
             title: $("#title").val(),
             content: editor.getData(),
-            date: $("#date").val()
+            date: $("#date").val(),
+            level: $("#level").val()
         };
 
         $.ajax({

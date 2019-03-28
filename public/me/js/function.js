@@ -24,6 +24,26 @@ function formatDateDb(date) {
     return [year, month, day].join('/');
 }
 
+function renderSelection(selector, selected_id=null) {
+    $.ajax({
+        url: 'http://nodejs.local.huynguyen.com.vn/api/note/show-level/',
+        type: 'GET',
+        dataType: 'json',
+    })
+    .done(function (data) {
+        var xhtml = '';
+        $(data.data).each(function (index, value) {
+            if(value.level_id == selected_id) {
+                xhtml += '<option selected value="'+ value.level_id +'">'+ value.level_name +'</option>';
+            } else {
+                xhtml += '<option value="'+ value.level_id +'">'+ value.level_name +'</option>';
+            }
+        })
+
+        $(selector).html(xhtml);
+    })
+}
+
 function loadDataAdmin(data) {
     var xhtml = '';
     $(data).each((index, val) => {
@@ -43,12 +63,21 @@ function loadData(data) {
     var xhtml = '';
 
     $(data).each(function(index, value) {
-        console.log(value)
+        var bg = 'text-white ';
+        if(value.level_id == '1')
+            bg += 'bg-info';
+        else if(value.level_id == '2')
+            bg += 'bg-success';
+        else if(value.level_id == '3') 
+            bg += 'bg-warning';
+        else bg += 'bg-danger';
+
         xhtml += '<div class="col-8">';
         xhtml += '<div class="card">';
-        xhtml += '<div class="card-header"><b>' + value.title + '</div></b>';
+        xhtml += '<div class="card-header '+ bg +'"><b>' + value.title + '</div></b>';
         xhtml += '<div class="card-body"><p>'+ value.content + '</p>';
-        xhtml += '<p><b><i>Deadline:</i></b> '+ formatDate(value.date) +'</p></div>';
+        xhtml += '<p><b><i>Deadline:</i></b> '+ formatDate(value.date) +'</p>';
+        xhtml += '<p><b><i>Tình trạng:</i></b> '+ value.level_name +'</p></div>';
         xhtml += '</div>';
         xhtml += '</div>';
     });
@@ -62,6 +91,6 @@ function loadAll() {
         type: 'GET'
     })
     .done(data => {
-        loadDataAdmin(data);
+        loadDataAdmin(data.data);
     });
 }

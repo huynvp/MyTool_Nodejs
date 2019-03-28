@@ -9,5 +9,9 @@
     "database": "myweb_user51c",
     "user": "root",
     "password": "123123"
+  }, 
+  "JWT": {
+    "screet_key": "HUYNGUYENNGUYENNGOCHANABC123456789111111",
+    "expires": 60
   }
 }
