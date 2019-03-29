@@ -49,11 +49,11 @@ function loadDataAdmin(data) {
     $(data).each((index, val) => {
         xhtml += '<tr>';
         xhtml += '<td>'+ val.note_id +'</td>';
-        xhtml += '<td>'+ val.title +'</td>';
-        xhtml += '<td>'+ formatDate(val.date) +'</td>';
-        xhtml += '<td>'+ formatDate(val.created_at) +'</td>';
-        xhtml += '<td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#edit-note" data-id="'+ val.note_id +'">Edit</button> ';
-        xhtml += '<button type="button" class="btn btn-danger btn-delete" data-id="'+ val.note_id +'">Delete</button></td>';
+        xhtml += '<td><i class="fas fa-sticky-note"></i> '+ val.title +'</td>';
+        xhtml += '<td><i class="fas fa-calendar-alt"></i> '+ formatDate(val.date) +'</td>';
+        xhtml += '<td><i class="fas fa-calendar-alt"></i> '+ formatDate(val.created_at) +'</td>';
+        xhtml += '<td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#edit-note" data-id="'+ val.note_id +'"><i class="fas fa-edit"></i>Edit</button> ';
+        xhtml += '<button type="button" class="btn btn-danger btn-delete" data-id="'+ val.note_id +'"><i class="fas fa-trash"></i> Delete</button></td>';
         xhtml += '</tr>';
     });
     $('#table-work').html(xhtml);
