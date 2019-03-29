@@ -6,7 +6,7 @@ class Note {
     }
 
     showAllNote() {
-        return db.load(`SELECT * FROM my_note, level WHERE my_note.level_id = level.level_id`);
+        return db.load(`SELECT * FROM my_note, level WHERE my_note.level_id = level.level_id ORDER BY orders`);
     }
 
     showOnceNote(id_note) {
@@ -14,13 +14,16 @@ class Note {
     }
 
     addNote(note) {
-        var sql = `INSERT INTO my_note (title, content, date, user, level_id, status, created_at, updated_at) 
-            VALUE ('${note.title}', '${note.content}', '${note.date}', 1, ${note.level}, 0, NOW(), NOW())`;
+        var sql = `INSERT INTO my_note (title, content, date, user, level_id, orders, status, created_at, updated_at) 
+            VALUE ('${note.title}', '${note.content}', '${note.date}', 1, ${note.level}, ${note.orders}, 0, NOW(), NOW())`;
         return db.insert(sql);
     }
 
     editNote(note) {
-        var sql = `UPDATE my_note SET title='${note.title}', content='${note.content}', level_id='${note.level}', date='${note.date}',updated_at=NOW() WHERE note_id=${note.id}`;
+        var sql = `UPDATE my_note 
+                SET title='${note.title}', content='${note.content}', level_id='${note.level}', 
+                date='${note.date}', orders=${note.orders},updated_at=NOW()
+                WHERE note_id=${note.id}`;
         return db.update(sql);
     }
 

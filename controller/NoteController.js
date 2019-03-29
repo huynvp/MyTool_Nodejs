@@ -44,7 +44,8 @@ class NoteController extends BaseController {
             'title': req.body.title,
             'content': req.body.content,
             'date': req.body.date,
-            'level': req.body.level
+            'level': req.body.level,
+            'orders': req.body.orders
         };
         this.note.addNote(data)
         .then(rows => {
@@ -63,7 +64,8 @@ class NoteController extends BaseController {
             'title': req.body.title,
             'content': req.body.content,
             'date': req.body.date,
-            'level': req.body.level
+            'level': req.body.level,
+            'orders': req.body.orders
             // 'status': req.body.status
         }
     

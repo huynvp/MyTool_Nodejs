@@ -18,6 +18,7 @@ $(document).ready( function () {
             $('#date-edit').val(formatDateDb(value['date']))
             editor_edit.setData(value['content'])
             renderSelection('#level-edit', value['level_id']);
+            $('#orders-edit').val(value['orders']);
         })
         .fail(err => {
             console.log(err)
@@ -31,6 +32,7 @@ $(document).ready( function () {
             content: editor_edit.getData(),
             date: $("#date-edit").val(),
             level: $("#level-edit").val(),
+            orders: $("#orders-edit").val()
         };
 
         $.ajax({
@@ -115,7 +117,8 @@ $(document).ready( function () {
             title: $("#title").val(),
             content: editor.getData(),
             date: $("#date").val(),
-            level: $("#level").val()
+            level: $("#level").val(),
+            orders: $("#orders").val()
         };
 
         $.ajax({
