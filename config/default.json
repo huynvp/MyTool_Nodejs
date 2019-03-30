@@ -12,6 +12,6 @@
   }, 
   "JWT": {
     "screet_key": "HUYNGUYENNGUYENNGOCHANABC123456789111111",
-    "expires": 60
+    "expires": 600
   }
 }

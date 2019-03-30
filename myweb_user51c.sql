@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 192.168.10.39
--- Thời gian đã tạo: Th3 27, 2019 lúc 05:26 PM
+-- Thời gian đã tạo: Th3 30, 2019 lúc 12:29 PM
 -- Phiên bản máy phục vụ: 10.3.7-MariaDB-1:10.3.7+maria~jessie
 -- Phiên bản PHP: 7.3.3-1+ubuntu16.04.1+deb.sury.org+1
 
@@ -60,6 +60,12 @@ FROM token, users
 WHERE (token.token_value = token_value or token.real_token_value )
 	AND token.user_id = users.user_id$$
 
+CREATE DEFINER=`` PROCEDURE `sp_nodejs_checklogin` (IN `username` VARCHAR(255), IN `password` VARCHAR(255))  NO SQL
+SELECT * FROM users WHERE users.user_email = username AND users.user_password = md5(password)$$
+
+CREATE DEFINER=`` PROCEDURE `sp_nodejs_show_user` (IN `username` VARCHAR(255))  NO SQL
+SELECT users.user_name, users.user_email, users.user_phone, users.user_birthday, users.user_address, users.user_status FROM users WHERE users.user_email = username$$
+
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_show_all_project` ()  NO SQL
 SELECT project.project_name, project.project_id, count(project_api.api_id) as 'count_project' 
             FROM project LEFT JOIN project_api ON project.project_id = project_api.id
@@ -87,6 +93,27 @@ CREATE TABLE `api` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `level`
+--
+
+CREATE TABLE `level` (
+  `level_id` int(10) UNSIGNED NOT NULL,
+  `level_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Level name'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Level of  note';
+
+--
+-- Đang đổ dữ liệu cho bảng `level`
+--
+
+INSERT INTO `level` (`level_id`, `level_name`) VALUES
+(1, 'Thông tin'),
+(2, 'Nhắc nhở'),
+(3, 'Trung bình'),
+(4, 'Gấp');
 
 -- --------------------------------------------------------
 
@@ -148,18 +175,24 @@ CREATE TABLE `my_note` (
   `status` int(11) NOT NULL,
   `user` int(10) UNSIGNED NOT NULL,
   `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `updated_at` datetime DEFAULT NULL,
+  `level_id` int(10) UNSIGNED NOT NULL,
+  `tag` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `orders` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `my_note`
 --
 
-INSERT INTO `my_note` (`note_id`, `title`, `content`, `date`, `status`, `user`, `created_at`, `updated_at`) VALUES
-(7, '[Daily][Work] Công việc ngày 27/3/2019', '<p>Công việc hàng ngày:&nbsp;</p><ul><li>Code tool ghi chú cá nhân (Code insert và update)</li><li>Update git</li><li>Code dự án Vietjet Bảo việt Insurance</li></ul>', '2019-03-27', 0, 1, '2019-03-27 12:00:35', '2019-03-27 15:31:21'),
-(9, '[Server][Vietjet] Thông tin server Vietjet', '<p><strong>Server Dev: (Training, Maint Intelisys, Demo group, BaoViet Insurance)</strong></p><ul><li>Host: 192.168.11.22</li><li>Port: 22</li><li>Username: Altamedia</li><li>Password: Altnmqa23</li><li>PhpMyadmin: <a href=\"http://192.168.11.22:8080/phpadm/\">http://192.168.11.22:8080/phpadm/</a></li><li>User: root / 123123</li></ul>', '2019-03-01', 0, 1, '2019-03-27 12:17:40', '2019-03-27 12:17:40'),
-(10, '[Nhắc nhở] Những việc chưa làm', '<ul><li>Viết báo cáo tuần team backend</li><li><i><strong>Nhận passport.</strong></i></li><li>Kí hợp đồng lao động Altamedia (3 tháng)(27-3-2019 -&gt; 27-6-2019)</li></ul>', '2019-03-29', 0, 1, '2019-03-27 12:21:18', '2019-03-27 15:35:37'),
-(14, '[Thực tập][Training]Hướng dẫn thực tập', '<p>Chuẩn bị làm:</p><ul><li>Làm bài test kiến thức vào thứ 2 (31/3)</li></ul><p>Đang làm:&nbsp;</p><ul><li>Thay đổi mật khẩu, thay đổi thông tin cá nhân</li></ul><p>Đã làm:</p><ul><li>Đăng nhập, đăng kí, đăng xuất</li><li>Hiển thị thông tin cá nhân.</li></ul>', '2019-03-29', 0, 1, '2019-03-27 16:13:33', '2019-03-27 16:15:14');
+INSERT INTO `my_note` (`note_id`, `title`, `content`, `date`, `status`, `user`, `created_at`, `updated_at`, `level_id`, `tag`, `orders`) VALUES
+(7, '[Work] [Daily] Công việc ngày 27/3/2019', '<p><strong>Công việc hàng ngày:&nbsp;</strong></p><ul><li>Code tool ghi chú cá nhân (Code insert và update)</li><li>Update git</li><li>Code dự án Vietjet Bảo việt Insurance</li></ul>', '2019-03-27', 0, 1, '2019-03-27 12:00:35', '2019-03-29 13:35:08', 2, NULL, 1),
+(8, '[Work] [Daily] Công việc ngày 28/3/2019', '<p><strong>Công việc hàng ngày:</strong></p><ul><li>Tiếp tục code BHBV</li><li>Chỉnh sửa quản lí ghi chú cá nhân (code tình trạng ghi chú, chuyển đổi qua OOP)</li></ul>', '2019-03-28', 0, 1, '2019-03-28 14:38:22', '2019-03-29 10:10:53', 2, NULL, 1),
+(9, '[Info] [Vietjet] [Server] Thông tin server Vietjet', '<p><strong>Server Dev: (Training, Maint Intelisys, Demo group, BaoViet Insurance)</strong></p><ul><li>Host: 192.168.11.22</li><li>Port: 22</li><li>Username: Altamedia</li><li>Password: Altnmqa23</li><li>PhpMyadmin: <a href=\"http://192.168.11.22:8080/phpadm/\">http://192.168.11.22:8080/phpadm/</a></li><li>User: root / 123123</li></ul>', '2019-03-01', 0, 1, '2019-03-27 12:17:40', '2019-03-29 10:11:05', 1, NULL, 3),
+(10, '[Work] [Nhắc nhở] Những việc chưa làm', '<ul><li>Viết báo cáo tuần team backend</li><li><i>Nhận passport.</i></li><li>Kí hợp đồng lao động Altamedia (3 tháng)(27-3-2019 -&gt; 27-6-2019)</li><li>Chờ bảo hiểm Bảo Việt feedback lỗi API bên BHBV</li><li><strong>Tiếp tục code quản lí cá nhân</strong><ul><li><strong>Thêm chức năng tag để dễ dàng lọc</strong></li><li><strong>Thêm chức năng tìm kiếm</strong></li></ul></li></ul>', '2019-03-29', 0, 1, '2019-03-27 12:21:18', '2019-03-29 17:40:14', 4, NULL, 2),
+(14, '[Thực tập] [Training]Hướng dẫn thực tập', '<p><strong>Chuẩn bị làm:</strong></p><ul><li>Làm bài test kiến thức vào thứ 2 (31/3)</li></ul><p><strong>Đang làm:&nbsp;</strong></p><ul><li>Thay đổi mật khẩu, thay đổi thông tin cá nhân (R)</li></ul><p><strong>Đã làm:</strong></p><ul><li>Đăng nhập, đăng kí, đăng xuất</li><li>Hiển thị thông tin cá nhân.</li><li>Gửi mail đổi mật khẩu</li><li>Đổi mật khẩu (chờ test)</li><li>Đổi thông tin cá nhân (chờ test)</li></ul>', '2019-03-29', 0, 1, '2019-03-27 16:13:33', '2019-03-29 10:11:17', 3, NULL, 2),
+(15, '[Info] [Vietjet] [Bảo Việt Insurance] Thông tin dự án', '<h4><strong>Thông tin server:</strong></h4><ul><li><i>IP</i>: 192.168.11.22</li><li><i>Username</i>: altamedia</li><li><i>Password</i>: Altnmqa23</li><li><i>Path</i>:<ul><li>Front end: /data/seriestraining_web/vietjetair-insurance.dev-altamedia.com</li><li>Back end: /data/seriestraining_web/vietjetair-insurance-api.dev-altamedia.com</li></ul></li><li><i>Serverside</i>:<ul><li>Front-end: http://vietjetair-insurance.dev-altamedia.com/</li><li>Back-end: http://vietjetair-insurance-api.dev-altamedia.com/api</li></ul></li><li><i>User</i> <i>login</i>: Y như seriesbooking vietjet<ul><li>Username: vietjetaltaapi</li><li>Password: qazxswedc</li></ul></li><li><i>API info: </i>https://docs.google.com/spreadsheets/d/12YRGwaPLi58ykzda0DPyVQD792UNBEfEhctfMFUfwiQ/edit?usp=sharing</li><li><i>Ngày bắt đầu</i>: 25/3/2019</li><li><i>Ngày kết thúc dự kiến</i>: 20/4/2019</li></ul>', '2019-04-17', 0, 1, '2019-03-28 10:18:29', '2019-03-29 10:11:29', 1, NULL, 3),
+(20, '[Work] [Daily] Công việc ngày 29/3/2019', '<p><strong>Công việc hàng ngày:</strong></p><ul><li>Code tiếp BHBV</li><li>Tìm hiểu code SSO login insight</li><li>Nhận passport (đã nhận)</li></ul>', '2019-03-29', 0, 1, '2019-03-29 10:27:11', '2019-03-29 13:35:45', 2, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -218,6 +251,16 @@ CREATE TABLE `project_api` (
   `api_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tag`
+--
+
+CREATE TABLE `tag` (
+  `tag_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -302,6 +345,12 @@ ALTER TABLE `api`
   ADD PRIMARY KEY (`api_id`);
 
 --
+-- Chỉ mục cho bảng `level`
+--
+ALTER TABLE `level`
+  ADD PRIMARY KEY (`level_id`);
+
+--
 -- Chỉ mục cho bảng `log`
 --
 ALTER TABLE `log`
@@ -313,7 +362,8 @@ ALTER TABLE `log`
 --
 ALTER TABLE `my_note`
   ADD PRIMARY KEY (`note_id`),
-  ADD KEY `FK_Note_User` (`user`);
+  ADD KEY `FK_Note_User` (`user`),
+  ADD KEY `fk_my_note_level` (`level_id`);
 
 --
 -- Chỉ mục cho bảng `permission`
@@ -335,6 +385,12 @@ ALTER TABLE `project_api`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_Project` (`project_id`),
   ADD KEY `FK_Api` (`api_id`);
+
+--
+-- Chỉ mục cho bảng `tag`
+--
+ALTER TABLE `tag`
+  ADD PRIMARY KEY (`tag_name`);
 
 --
 -- Chỉ mục cho bảng `token`
@@ -362,6 +418,12 @@ ALTER TABLE `api`
   MODIFY `api_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `level`
+--
+ALTER TABLE `level`
+  MODIFY `level_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT cho bảng `log`
 --
 ALTER TABLE `log`
@@ -371,7 +433,7 @@ ALTER TABLE `log`
 -- AUTO_INCREMENT cho bảng `my_note`
 --
 ALTER TABLE `my_note`
-  MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT cho bảng `permission`
@@ -417,7 +479,8 @@ ALTER TABLE `log`
 -- Các ràng buộc cho bảng `my_note`
 --
 ALTER TABLE `my_note`
-  ADD CONSTRAINT `FK_Note_User` FOREIGN KEY (`user`) REFERENCES `users` (`user_id`);
+  ADD CONSTRAINT `FK_Note_User` FOREIGN KEY (`user`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `fk_my_note_level` FOREIGN KEY (`level_id`) REFERENCES `level` (`level_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Các ràng buộc cho bảng `project`
