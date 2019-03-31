@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>To do list</title>
+	<link rel="shortcut icon" href="./logo.png" type="image/x-icon" />
+	<link rel="stylesheet" href='./css/bootstrap.css'>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<style>
+		body {
+			background: #793d3d;
+		}
+		.container {
+			margin-top: 10px;
+		}
+
+		.card {
+			margin: 10px
+		}
+
+		#title {
+			text-align: center;
+			font-weight: bold;
+			color: #b1b1b1;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h3 id="title">GHI CHÚ CÁ NHÂN</h3>
+		<a href="admin-toDoList.html" class="btn btn-sm btn-primary">Quản lí ghi chú <i class="fas fa-chevron-circle-right"></i></a>
+		<div class="row d-flex justify-content-center" id="work-list">
+
+		</div>
+	</div>
+
+	<script src="./js/jquery.js"></script>
+	<script src="./js/bootstrap.js"></script>
+	<script src="./me/js/function.js"></script>
+	<script>
+		$.ajax({
+			url: 'http://nodejs.local.huynguyen.com.vn/api/note/show-all',
+			type: 'GET'
+		})
+		.done(data => {
+			loadData(data.data);
+		});
+	</script>
+</body>
+</html>
