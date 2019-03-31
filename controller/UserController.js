@@ -13,11 +13,17 @@ class UserController extends BaseController {
         this.user = new User();
     }
 
+    checkUser(req, res) {
+        
+    }
+
     checkLogin(req, res) {
         if(req.body.username == null) {
+            res.status(400);
             res.json('Username is not empty');
         }
         if(req.body.password == null) {
+            res.status(400);
             res.json('Password is not empty');
         }
         this.user.checkLogin(req.body.username, req.body.password)
