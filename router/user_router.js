@@ -12,7 +12,7 @@ router.post('/login', (req, res) => {
     user_controller.checkLogin(req, res);
 })
 
-router.post('/show-user', middleware.checkToken, (req, res) => {
+router.get('/show-user', middleware.checkToken, (req, res) => {
     user_controller.showUser(req, res);
 })
 
