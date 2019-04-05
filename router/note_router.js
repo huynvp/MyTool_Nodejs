@@ -25,11 +25,11 @@ router.post('/add', (req, res) => {
     note_controller.add(req, res);
 })
 
-router.put('/update', (req, res) => {
+router.post('/update', (req, res) => {
     note_controller.edit(req, res);
 })
 
-router.delete('/delete', (req, res) => {
+router.post('/delete', (req, res) => {
     note_controller.delete(req, res);
 })
 

@@ -16,6 +16,7 @@ class Middware {
                         key: null,
                         status: 401
                     });
+                    return;
                 }
 
                 req.pay_load = decoded.data;

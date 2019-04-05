@@ -14,17 +14,17 @@ class UserController extends BaseController {
     }
 
     checkUser(req, res) {
-        
+        res.json(this.responseData(null, 'Check ok', null, 200));
     }
 
     checkLogin(req, res) {
         if(req.body.username == null) {
             res.status(400);
-            res.json('Username is not empty');
+            res.json(this.responseData(null, 'Username is not empty', null, 400));
         }
         if(req.body.password == null) {
             res.status(400);
-            res.json('Password is not empty');
+            res.json(this.responseData(null, 'Password is not empty', null, 400));
         }
         this.user.checkLogin(req.body.username, req.body.password)
         .then(rows => {
@@ -58,6 +58,20 @@ class UserController extends BaseController {
             res.status(400);
             res.json(this.responseData(null, 'User not exists', null, 400));
         });
+    }
+
+    changeInfo(req, res) {
+        this.user.changeInfo(req.pay_load, req.body)
+        .then(rows => {
+            console.log(rows);
+            res.status(200);
+            res.json(this.responseData(null, 'Change info succcess', null, 200));
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.json(this.responseData(null, 'Change info faild', null, 400));
+        })
     }
 }
 
