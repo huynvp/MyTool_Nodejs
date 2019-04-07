@@ -12,7 +12,8 @@ exports.load = (sql) => {
         port: config_sql.port,
         user: config_sql.user,
         password: config_sql.password,
-        database: config_sql.database
+        database: config_sql.database,
+        multipleStatements: true
     });
 
     conn.connect(function(err) {
@@ -72,7 +73,8 @@ exports.update = (sql) => {
         port: config_sql.port,
         user: config_sql.user,
         password: config_sql.password,
-        database: config_sql.database
+        database: config_sql.database,
+        multipleStatements: true
     });
 
     conn.connect(function(err) {
@@ -123,3 +125,4 @@ exports.delete = (sql) => {
     })
     return d.promise;
 }
+

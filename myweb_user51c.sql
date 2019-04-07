@@ -2,10 +2,10 @@
 -- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 192.168.10.39
--- Thời gian đã tạo: Th4 05, 2019 lúc 06:36 PM
+-- Máy chủ: 192.168.100.10
+-- Thời gian đã tạo: Th4 08, 2019 lúc 12:36 AM
 -- Phiên bản máy phục vụ: 10.3.7-MariaDB-1:10.3.7+maria~jessie
--- Phiên bản PHP: 7.3.3-1+ubuntu16.04.1+deb.sury.org+1
+-- Phiên bản PHP: 7.2.16-1+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -63,8 +63,20 @@ WHERE (token.token_value = token_value or token.real_token_value )
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_nodejs_change_info_user` (IN `name` VARCHAR(255), IN `email` VARCHAR(2255), IN `birthday` DATE, IN `address` VARCHAR(255), IN `phone` VARCHAR(255))  NO SQL
 UPDATE users SET users.user_name = name, users.user_phone=phone, users.user_birthday=birthday, users.user_address = address WHERE users.user_email=email$$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `sp_nodejs_change_pass_user` (IN `old_pass` VARCHAR(255), IN `new_pass` INT(255))  NO SQL
-SELECT 1$$
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_nodejs_change_pass_user` (IN `email` VARCHAR(255), IN `old_pass` VARCHAR(255), IN `new_pass` VARCHAR(255), OUT `status_code` INT)  NO SQL
+BEGIN
+	DECLARE id INT;
+    SET status_code = 0;
+	SELECT users.user_id INTO id FROM users WHERE users.user_password = md5(old_pass) AND users.user_email = email;
+    
+    IF id IS NULL
+    THEN
+    	SET status_code = 401;
+    ELSE
+    	UPDATE users SET users.user_password = md5(new_pass), users.updated_at = NOW() WHERE users.user_id = id;
+    	SET status_code = 200;
+    END IF;
+END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_nodejs_checklogin` (IN `username` VARCHAR(255), IN `password` VARCHAR(255))  NO SQL
 SELECT * FROM users WHERE users.user_email = username AND users.user_password = md5(password)$$
@@ -192,7 +204,7 @@ CREATE TABLE `my_note` (
 --
 
 INSERT INTO `my_note` (`note_id`, `title`, `content`, `date`, `status`, `user`, `created_at`, `updated_at`, `level_id`, `tag`, `orders`) VALUES
-(7, '[Work] [Daily] Công việc ngày 27/3/2019', '<p><strong>Công việc hàng ngày:&nbsp;</strong></p><ul><li>Code tool ghi chú cá nhân (Code insert và update)</li><li>Update git</li><li>Code dự án Vietjet Bảo việt Insurance</li></ul>', '2019-03-27', 0, 1, '2019-03-27 12:00:35', '2019-03-29 13:35:08', 2, NULL, 1),
+(7, '[Work] [Daily] Công việc ngày 27/3/2019', '<p><strong>Công việc hàng ngày:&nbsp;</strong></p><ul><li>Code tool ghi chú cá nhân (Code insert và update)</li><li>Update git</li><li>Code dự án Vietjet Bảo việt Insurance</li></ul>', '2019-03-27', 0, 1, '2019-03-27 12:00:35', '2019-04-06 17:22:27', 2, NULL, 1),
 (8, '[Work] [Daily] Công việc ngày 28/3/2019', '<p><strong>Công việc hàng ngày:</strong></p><ul><li>Tiếp tục code BHBV</li><li>Chỉnh sửa quản lí ghi chú cá nhân (code tình trạng ghi chú, chuyển đổi qua OOP)</li></ul>', '2019-03-28', 0, 1, '2019-03-28 14:38:22', '2019-03-29 10:10:53', 2, NULL, 1),
 (9, '[Info] [Vietjet] [Server] Thông tin server Vietjet', '<p><strong>Server Dev: (Training, Maint Intelisys, Demo group, BaoViet Insurance)</strong></p><ul><li>Host: 192.168.11.22</li><li>Port: 22</li><li>Username: Altamedia</li><li>Password: Altnmqa23</li><li>PhpMyadmin: <a href=\"http://192.168.11.22:8080/phpadm/\">http://192.168.11.22:8080/phpadm/</a></li><li>User: root / 123123</li></ul>', '2019-03-01', 0, 1, '2019-03-27 12:17:40', '2019-03-29 10:11:05', 1, NULL, 3),
 (10, '[Work] [Nhắc nhở] Những việc chưa làm', '<ul><li>Viết báo cáo tuần team backend</li><li><i>Nhận passport.</i></li><li>Kí hợp đồng lao động Altamedia (3 tháng)(27-3-2019 -&gt; 27-6-2019)</li><li>Chờ bảo hiểm Bảo Việt feedback lỗi API bên BHBV</li><li><strong>Tiếp tục code quản lí cá nhân</strong><ul><li><strong>Thêm chức năng tag để dễ dàng lọc</strong></li><li><strong>Thêm chức năng tìm kiếm</strong></li></ul></li></ul>', '2019-03-29', 0, 1, '2019-03-27 12:21:18', '2019-03-29 17:40:14', 4, NULL, 2),
@@ -333,7 +345,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_phone`, `user_birthday`, `user_address`, `user_password`, `permission_id`, `user_status`, `created_at`, `updated_at`) VALUES
-(1, 'Nguyễn Quang Huy', 'admin@gmail.com', '0966033066', '1997-10-13', '101/162/2A Đông Thạnh Hóc Môn', '4297f44b13955235245b2497399d7a93', 1, 1, '2019-01-28 22:54:12', '2019-01-28 22:54:12'),
+(1, 'Nguyễn Quang Huy', 'admin@gmail.com', '0966033066', '1997-10-13', '101/162/2A Đông Thạnh Hóc Môn', '4297f44b13955235245b2497399d7a93', 1, 1, '2019-01-28 22:54:12', '2019-04-07 05:45:36'),
 (2, 'Nguyễn Quang Huy User', 'huynvp@gmail.com', '0123456789', '1997-10-13', '101/162/2a Ấp 4 xã Đông Thạnh huyện Hóc Môn', '4297f44b13955235245b2497399d7a93', 2, 1, '2019-01-29 21:58:53', '2019-01-29 21:58:53'),
 (5, 'User test', '123@gmail.com', '0285969587', '1996-12-10', '123 123 ', '827ccb0eea8a706c4c34a16891f84e7b', 3, 1, '2019-02-21 04:57:53', '2019-02-21 04:57:53'),
 (10, 'qưeqưeưqe', 'eưqeqwe', 'ưqe', '2019-02-07', 'ưqeưqe', '827ccb0eea8a706c4c34a16891f84e7b', 2, 1, '2019-02-21 14:51:45', '2019-02-21 14:51:45'),

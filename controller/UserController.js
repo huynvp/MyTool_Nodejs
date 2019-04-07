@@ -61,6 +61,7 @@ class UserController extends BaseController {
     }
 
     changeInfo(req, res) {
+        console.log(req.body)
         this.user.changeInfo(req.pay_load, req.body)
         .then(rows => {
             console.log(rows);
@@ -72,6 +73,31 @@ class UserController extends BaseController {
             res.status(400);
             res.json(this.responseData(null, 'Change info faild', null, 400));
         })
+    }
+
+    changePass(req, res) {
+        this.user.changePass(req.pay_load, req.body)
+        .then(rows => {
+            console.log(rows);
+            res.status(200);
+            res.json(this.responseData(null, 'Change pass succcess', null, 200));
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.json(this.responseData(null, 'Change pass faild', null, 400));
+        })
+    }
+
+    refreshToken(req, res) {
+        var token = JWT.sign({
+            data: {
+                'username': req.pay_load.username
+            }
+        }, jwt_config.screet_key, { expiresIn: jwt_config.expires });
+
+        res.status(200);
+        res.json(this.responseData({token: token}, 'Refresh token success', null, 200));
     }
 }
 

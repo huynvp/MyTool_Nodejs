@@ -23,9 +23,11 @@ class User {
 
     changePass(email, body) {
         let sql = `CALL sp_nodejs_change_pass_user(
+            '${email.username}', 
             '${body.old_pass}', 
-            '${email.new_pass}')`;
-        return db.update(sql);
+            '${body.new_pass}', 
+            @status_code); SELECT @status_code;`;
+        return db.load(sql);
     }
 }
 

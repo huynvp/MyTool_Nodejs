@@ -24,4 +24,11 @@ router.post('/change-info', middleware.checkToken, (req, res) => {
     user_controller.changeInfo(req, res);
 })
 
+router.post('/change-pass', middleware.checkToken, (req, res) => {
+    user_controller.changePass(req, res);
+})
+
+router.post('/refresh-token', middleware.checkToken, (req, res) => {
+    user_controller.refreshToken(req, res);
+})
 module.exports = router;
