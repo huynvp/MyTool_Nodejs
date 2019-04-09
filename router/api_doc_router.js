@@ -15,6 +15,25 @@ router.get('/project', middleware.checkToken, (req, res) => {
     project_controller.showProject(req, res);
 })
 
+router.get('/api/:id', middleware.checkToken, (req, res) => {
+    project_controller.showOneApi(req, res);
+})
+
+router.post('/api/add', middleware.checkToken, (req, res) => {
+    project_controller.addApi(req, res);
+})
+
+router.post('/project/add', middleware.checkToken, (req, res) => {
+    project_controller.addProject(req, res);
+})
+
+router.post('/api/edit', middleware.checkToken, (req, res) => {
+    project_controller.editApi(req, res);
+})
+
+router.post('/api/delete', middleware.checkToken, (req, res) => {
+    project_controller.deleteApi(req, res);
+})
 
 
 module.exports = router;
