@@ -26,6 +26,14 @@ DELIMITER $$
 --
 -- Thủ tục
 --
+CREATE DEFINER=`` PROCEDURE `sp_add_api` (IN `project_id` INT, IN `method` VARCHAR(255), IN `name` VARCHAR(255), IN `content` VARCHAR(255), IN `params` LONGTEXT, IN `response` LONGTEXT)  NO SQL
+BEGIN 
+	DECLARE last_insert_id INT;
+	INSERT INTO api (api_method, api_name, api_content, api_params, api_response, api_status, created_at, updated_at) VALUES (method, name, content, params, response, 1, Now(), Now());
+    SELECT LAST_INSERT_ID() INTO last_insert_id;
+    INSERT INTO project_api (project_id, api_id, created_at, updated_at) VALUES (project_id, last_insert_id, Now(), Now());
+END$$
+
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_add_user` (IN `name` VARCHAR(255), IN `birthday` DATE, IN `phone` VARCHAR(255), IN `email` VARCHAR(255), IN `address` VARCHAR(255), IN `permission` VARCHAR(255))  NO SQL
 BEGIN
 	INSERT INTO `users` (`name`, `email`, `phone`, `birthday`, `address`, `password`, `permission`, `status`, `created_at`, `updated_at`) VALUES (name, email, phone, birthday, address, md5('12345'), permission, 1, Now(), Now());
@@ -43,6 +51,17 @@ BEGIN
 		SET token = CONCAT(sha(CONCAT(var_username, CAST(RAND() AS CHARACTER))),'.', sha(CONCAT(var_username, CAST(RAND() AS CHARACTER))),'.', sha(CONCAT(var_username, CAST(RAND() AS CHARACTER))),'.',sha(CONCAT(var_username, CAST(RAND() AS CHARACTER))));
         INSERT INTO `token`(`token_value`, `real_token_value`, `token_expired_at`, `user_id`, `created_at`, `updated_at`) VALUES (token, token, DATE_ADD(NOW(), INTERVAL 1 HOUR), var_id, NOW(), NOW());
     END IF;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `sp_delete_api` (IN `id` INT)  NO SQL
+BEGIN
+	DELETE FROM project_api WHERE api_id=id;
+	DELETE FROM api WHERE api_id=id;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `sp_edit_api` (IN `id` INT, IN `method` VARCHAR(255), IN `name` VARCHAR(255), IN `content` VARCHAR(255), IN `params` LONGTEXT, IN `response` LONGTEXT)  NO SQL
+BEGIN 
+	UPDATE api SET api_method=method, api_name=name, api_content=content, api_params=params, api_response=response, updated_at=NOW() WHERE api_id = id;
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_get_user` (IN `token_value` VARCHAR(255))  NO SQL
@@ -88,9 +107,12 @@ CREATE DEFINER=`root`@`%` PROCEDURE `sp_refresh_token` (IN `old_token` VARCHAR(2
 END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_show_all_project` ()  NO SQL
-SELECT project.project_name, project.project_id, count(project_api.api_id) as 'count_project' 
-            FROM project LEFT JOIN project_api ON project.project_id = project_api.id
-            GROUP BY project.project_name, project.project_id$$
+SELECT project.project_name, project.project_id, COUNT(project_api.api_id) as 'count_project' 
+	FROM project LEFT JOIN project_api ON project.project_id = project_api.project_id
+	GROUP BY project.project_name, project.project_id$$
+
+CREATE DEFINER=`` PROCEDURE `sp_show_detail_project` (IN `id` INT)  NO SQL
+SELECT api.* FROM api, project_api WHERE project_api.project_id = id AND project_api.api_id = api.api_id$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_show_detail_project` (IN `id` INT)  NO SQL
 SELECT * FROM api, project_api WHERE api.api_id = project_api.api_id AND project_api.project_id = id$$
@@ -111,12 +133,19 @@ CREATE TABLE `api` (
   `api_method` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `api_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `api_content` text COLLATE utf8_unicode_ci DEFAULT '',
-  `api_params` text COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `api_response` text COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `api_params` longtext COLLATE utf8_unicode_ci NOT NULL DEFAULT '\'\'',
+  `api_response` longtext COLLATE utf8_unicode_ci NOT NULL DEFAULT '\'\'',
   `api_status` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `api`
+--
+
+INSERT INTO `api` (`api_id`, `api_method`, `api_name`, `api_content`, `api_params`, `api_response`, `api_status`, `created_at`, `updated_at`) VALUES
+(20, 'Post', 'Login', '<p>Api login (Intelisys vietjet maint)</p>', '<ul><li>username: vietjetaltaapi</li><li>password: qazxswedc</li></ul>', '<ul><li>data:<ul><li>token: dasda1sd213a1s3d21as32d</li><li>permission: Superadmin</li></ul></li><li>message: Login success</li><li>status_code: 200</li></ul><blockquote><p>status code: 403 not have permission</p><p>status code: 401 wrong username, password</p></blockquote>', 1, '2019-04-09 10:36:58', '2019-04-09 10:47:05');
 
 -- --------------------------------------------------------
 
@@ -264,8 +293,8 @@ CREATE TABLE `project` (
 --
 
 INSERT INTO `project` (`project_id`, `user_id`, `project_name`, `project_status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Vietjet', 1, '2019-01-28 15:58:14', '2019-01-28 15:58:14'),
-(2, 1, 'Gameshow', 1, '2019-01-28 15:58:20', '2019-01-28 15:58:20');
+(7, 1, 'Vietjet Bảo hiểm Bảo Việt Tool', 1, '2019-04-09 08:18:37', '2019-04-09 08:18:37'),
+(11, 1, 'Vietjet booking managed tool', 1, '2019-04-09 10:32:38', '2019-04-09 10:32:38');
 
 -- --------------------------------------------------------
 
@@ -280,6 +309,13 @@ CREATE TABLE `project_api` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `project_api`
+--
+
+INSERT INTO `project_api` (`id`, `project_id`, `api_id`, `created_at`, `updated_at`) VALUES
+(7, 11, 20, '2019-04-09 10:36:58', '2019-04-09 10:36:58');
 
 -- --------------------------------------------------------
 
@@ -418,6 +454,7 @@ ALTER TABLE `permission`
 --
 ALTER TABLE `project`
   ADD PRIMARY KEY (`project_id`),
+  ADD UNIQUE KEY `project_name` (`project_name`),
   ADD KEY `FK_Project_User` (`user_id`);
 
 --
@@ -457,7 +494,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `api`
 --
 ALTER TABLE `api`
-  MODIFY `api_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `api_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT cho bảng `level`
@@ -487,13 +524,13 @@ ALTER TABLE `permission`
 -- AUTO_INCREMENT cho bảng `project`
 --
 ALTER TABLE `project`
-  MODIFY `project_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `project_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT cho bảng `project_api`
 --
 ALTER TABLE `project_api`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT cho bảng `token`
