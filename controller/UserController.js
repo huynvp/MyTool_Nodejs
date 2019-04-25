@@ -23,7 +23,7 @@ class UserController extends BaseController {
         .catch(err => {
             console.log(err);
             res.status(400);
-            res.json(this.responseData(data, 'Sign up error', null, 400));
+            res.json(this.responseData(err, 'Sign up error', null, 400));
         });
     }
 
