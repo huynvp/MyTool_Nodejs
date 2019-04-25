@@ -1,6 +1,17 @@
 var db = require('../function/mysql');
 
 class User {
+    signup(name, email, birthday, address, phone, password) {
+        let sql =  `CALL sp_add_user(
+            '${name}', 
+            '${birthday}', 
+            '${phone}', 
+            '${email}', 
+            '${address}',
+            2, 
+            '${password}')`;
+        return db.insert(sql);
+    };
     checkLogin(username, password) {
         let sql = `CALL sp_nodejs_checklogin('${username}', '${password}')`;
         return db.load(sql);

@@ -13,6 +13,20 @@ class UserController extends BaseController {
         this.user = new User();
     }
 
+    signup(req, res) {
+        let body = req.body;
+        this.user.signup(body.name, body.email, body.birthday, body.address, body.phone, body.password)
+        .then(data => {
+            res.status(200);
+            res.json(this.responseData(data, 'Sign up success', null, 200));
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.json(this.responseData(data, 'Sign up error', null, 400));
+        });
+    }
+
     checkUser(req, res) {
         res.json(this.responseData(null, 'Check ok', null, 200));
     }

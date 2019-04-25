@@ -12,6 +12,10 @@ router.post('/login', (req, res) => {
     user_controller.checkLogin(req, res);
 })
 
+router.post('/sign-up', (req, res) => {
+    user_controller.signup(req, res);
+})
+
 router.get('/check-user', middleware.checkToken, (req, res) => {
     user_controller.checkUser(req, res);
 })
