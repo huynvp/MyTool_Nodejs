@@ -4,7 +4,7 @@
     "port": 3000
   },
   "DbConfig": {
-    "host": "192.168.100.10",
+    "host": "192.168.10.39",
     "port": 3306,
     "database": "myweb_user51c",
     "user": "root",
@@ -12,6 +12,6 @@
   },
   "JWT": {
     "screet_key": "HUYNGUYENNGUYENNGOCHANABC123456789111111",
-    "expires": 3600
+    "expires": 36000
   }
 }
