@@ -6,7 +6,7 @@ class Note {
     }
 
     showAllNote() {
-        return db.load(`SELECT * FROM my_note, level WHERE my_note.level_id = level.level_id ORDER BY orders`);
+        return db.load(`SELECT * FROM my_note, level WHERE my_note.level_id = level.level_id ORDER BY orders, created_at DESC`);
     }
 
     showOnceNote(id_note) {
