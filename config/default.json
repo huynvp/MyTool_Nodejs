@@ -7,11 +7,11 @@
     "host": "156.67.218.93",
     "port": 3306,
     "database": "myweb_123456",
-    "user": "root",
-    "password": "123123"
+    "user": "user_docker",
+    "password": "OC6FhPGVhB4CmkOh"
   },
   "JWT": {
-    "screet_key": "HUYNGUYENNGUYENNGOCHANABC123456789111111",
+    "screet_key": "NguyenQuangHuyNguYeNnGocHaN123456789!@#$%^&*()_++++",
     "expires": 36000
   }
 }
