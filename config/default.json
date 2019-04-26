@@ -6,7 +6,7 @@
   "DbConfig": {
     "host": "156.67.218.93",
     "port": 3306,
-    "database": "myweb_123456",
+    "database": "myweb_user51c",
     "user": "user_docker",
     "password": "OC6FhPGVhB4CmkOh"
   },
