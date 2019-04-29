@@ -28,7 +28,7 @@ class UserController extends BaseController {
     }
 
     checkUser(req, res) {
-        res.json(this.responseData(null, 'Check ok', null, 200));
+        res.json(this.responseData(req.pay_load.username, 'Check ok', null, 200));
     }
 
     checkLogin(req, res) {
