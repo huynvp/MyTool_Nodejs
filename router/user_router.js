@@ -12,8 +12,8 @@ var storage = multer.diskStorage({
         cb(null, './public/image/avatar/')
     },
     filename: function (req, file, cb) {
-        console.log(file.originalname)
-        cb(null, file.originalname)
+        req.file_name = Date.now() + file.originalname;
+        cb(null, Date.now() + file.originalname)
     }
 })
 var upload = multer({ storage: storage })
@@ -49,7 +49,7 @@ router.post('/refresh-token', middleware.checkToken, (req, res) => {
     user_controller.refreshToken(req, res);
 })
 
-router.post('/update-avatar', upload.single('file'), (req, res) => {
-    res.status(200).json('Success')
+router.post('/update-avatar', upload.single('file'), middleware.checkToken, (req, res) => {
+    user_controller.uploadAvatar(req, res);
 })
 module.exports = router;

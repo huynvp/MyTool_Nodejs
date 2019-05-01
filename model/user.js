@@ -40,6 +40,11 @@ class User {
             @status_code); SELECT @status_code;`;
         return db.load(sql);
     }
+
+    updateAvatarPath(email, avatar_path) {
+        let sql = `CALL sp_update_avatar_path('${email}', '${avatar_path}')`;
+        return db.update(sql);
+    }
 }
 
 module.exports = User;

@@ -83,7 +83,6 @@ class UserController extends BaseController {
     changeInfo(req, res) {
         this.user.changeInfo(req.pay_load, req.body)
         .then(rows => {
-            console.log(rows);
             res.status(200);
             res.json(this.responseData(null, 'Change info succcess', null, 200));
         })
@@ -97,7 +96,6 @@ class UserController extends BaseController {
     changePass(req, res) {
         this.user.changePass(req.pay_load, req.body)
         .then(rows => {
-            console.log(rows);
             res.status(200);
             res.json(this.responseData(null, 'Change pass succcess', null, 200));
         })
@@ -120,7 +118,14 @@ class UserController extends BaseController {
     }
 
     uploadAvatar(req, res) {
-        
+        this.user.updateAvatarPath(req.pay_load.username, req.file_name)
+        .then (() => {
+            res.status(200).json(this.responseData(req.file_name, 'Success', null, 200))
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json(this.responseData(req.file_name, 'Error', null, 200))
+        });
     }
 }
 
