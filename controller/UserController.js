@@ -28,7 +28,13 @@ class UserController extends BaseController {
     }
 
     checkUser(req, res) {
-        res.json(this.responseData(req.pay_load.username, 'Check ok', null, 200));
+        this.user.showUser(req.pay_load.username)
+        .then((data) => {
+            res.status(200).json(this.responseData(data[0][0], 'Check ok', null, 200));
+        })
+        .catch(err => {
+            res.status(400).json(this.responseData(null, 'Check ok', null, 200));
+        });
     }
 
     checkLogin(req, res) {
@@ -75,7 +81,6 @@ class UserController extends BaseController {
     }
 
     changeInfo(req, res) {
-        console.log(req.body)
         this.user.changeInfo(req.pay_load, req.body)
         .then(rows => {
             console.log(rows);
@@ -112,6 +117,10 @@ class UserController extends BaseController {
 
         res.status(200);
         res.json(this.responseData({token: token}, 'Refresh token success', null, 200));
+    }
+
+    uploadAvatar(req, res) {
+        
     }
 }
 

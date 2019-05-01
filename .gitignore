@@ -58,8 +58,6 @@ typings/
 .env
 
 # next.js build output
-<<<<<<< HEAD
 .next
-=======
-.next
->>>>>>> b10d5bcf923aabf31bc95df26a34f3793a9bae36
+
+public/image/avatar/

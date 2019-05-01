@@ -1,9 +1,22 @@
 var express = require('express');
+    multer = require('multer');
+    upload = multer({ dest: 'public/uploads/' });
 
 var router = express.Router();
 var UserController = require('../controller/UserController');
 
 var Middleware = require('../function/middleware');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/image/avatar/')
+    },
+    filename: function (req, file, cb) {
+        console.log(file.originalname)
+        cb(null, file.originalname)
+    }
+})
+var upload = multer({ storage: storage })
 
 var user_controller = new UserController();
 var middleware = new Middleware();
@@ -34,5 +47,9 @@ router.post('/change-pass', middleware.checkToken, (req, res) => {
 
 router.post('/refresh-token', middleware.checkToken, (req, res) => {
     user_controller.refreshToken(req, res);
+})
+
+router.post('/update-avatar', upload.single('file'), (req, res) => {
+    res.status(200).json('Success')
 })
 module.exports = router;
