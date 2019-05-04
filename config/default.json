@@ -8,7 +8,7 @@
     "port": 3306,
     "database": "myweb_user51c",
     "user": "user_docker",
-    "password": "AgBHbsrDYj5ocARw"
+    "password": "fYDeVQfPTbj37X0h"
   },
   "JWT": {
     "screet_key": "NguyenQuangHuyNguYeNnGocHaN123456789!@#$%^&*()_++++",
