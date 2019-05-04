@@ -8,7 +8,6 @@ var express = require('express'),
 
 var app = express();
 var server_config = config.get('ServerConfig');
-var socket_config = config.get('SocketConfig');
 
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' })
 
@@ -24,7 +23,7 @@ app.use('/', express.static(__dirname + "/public"));
 //     var data = fs.readFileSync(`./public/uploads/${req.file.filename}`);
 //     var excel = xlsx.read(data, {type:'buffer'});
 
-    
+
 //     res.json(excel)
 // })
 
